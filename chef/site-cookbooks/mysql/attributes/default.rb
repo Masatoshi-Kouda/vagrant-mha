@@ -1,0 +1,7 @@
+default['mysql']['url_path'] = 'http://dev.mysql.com/get/Downloads/MySQL-5.6'
+default['mysql']['client'] = 'MySQL-client-5.6.25-1.el6.x86_64.rpm'
+default['mysql']['shared_compat'] = 'MySQL-shared-compat-5.6.25-1.el6.x86_64.rpm'
+default['mysql']['server'] = 'MySQL-server-5.6.25-1.el6.x86_64.rpm'
+default['mysql']['devel'] = 'MySQL-devel-5.6.25-1.el6.x86_64.rpm'
+default['mysql']['shared'] = 'MySQL-shared-5.6.25-1.el6.x86_64.rpm'
+default['mysql']['user']['root'] = 'ZlQbAIE2gK'

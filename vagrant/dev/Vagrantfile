@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  config.omnibus.chef_version = :latest
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "512", "--cpus", "1", "--ioapic", "on"]
+  end
+
+$script = <<SCRIPT
+  echo "nameserver 8.8.8.8" > /etc/resolv.conf
+  echo "PEERDNS=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+SCRIPT
+
+  config.vm.define :db01 do |db01|
+    db01.vm.box = "centos-6.5-x86_64"
+    db01.vm.network :private_network, ip: "10.0.0.3"
+    db01.ssh.guest_port = 62323
+    db01.vm.network :forwarded_port, guest: 62323, host: 2222, id: "ssh", auto_correct: true
+    db01.vm.hostname = "db01"
+    db01.vm.provision "shell", inline: $script
+    db01.vm.provision "chef_solo" do |chef|
+      chef.cookbooks_path = "../../chef/site-cookbooks/"
+      chef.run_list = %w[
+        recipe[base]
+        recipe[ntp]
+        recipe[mysql::client]
+        recipe[mysql::server]
+        recipe[mysql::setup]
+        recipe[mysql-mha::node]
+      ]
+    end
+  end
+
+end

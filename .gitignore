@@ -1,0 +1,13 @@
+/.bundle
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+.secret
+/vendor
+/vagrant/.vagrant
+/vagrant/dev/.vagrant
+/packer/packer_cache
+/packer/*.box
