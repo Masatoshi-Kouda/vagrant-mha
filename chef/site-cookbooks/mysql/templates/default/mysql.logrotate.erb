@@ -1,0 +1,15 @@
+/var/lib/mysql/*.log {
+    create 660 mysql mysql
+    notifempty
+    daily
+    rotate 7
+    missingok
+    compress
+    postrotate
+      # just if mysqld is really running
+      if test -x mysqladmin && mysqladmin -u root -p<%= @root_password %> ping
+      then
+        mysql -u root -p<%= @root_password %> -e "flush slow logs; flush error logs"
+      fi
+    endscript
+}

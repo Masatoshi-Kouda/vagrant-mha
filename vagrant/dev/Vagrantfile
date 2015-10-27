@@ -29,6 +29,7 @@ SCRIPT
         recipe[mysql::client]
         recipe[mysql::server]
         recipe[mysql::setup]
+        recipe[mysql::conf]
         recipe[mysql-mha::node]
       ]
     end

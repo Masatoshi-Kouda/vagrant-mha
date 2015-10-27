@@ -1,0 +1,96 @@
+[client]
+port = <%= @port %>
+socket = /var/lib/mysql/mysql.sock
+
+[mysqld]
+port = <%= @port %>
+datadir = /var/lib/mysql
+socket = /var/lib/mysql/mysql.sock
+pid-file = /var/lib/mysql/mysql.pid
+user=mysql
+explicit_defaults_for_timestamp = 1
+
+#------------------------------
+# log and characterset
+#------------------------------
+character-set-server = utf8
+collation-server = utf8_general_ci
+lower_case_table_names = 1
+log_output = FILE
+long_query_time = 5
+slow_query_log = 1
+slow_query_log_file = /var/lib/mysql/slow.log
+log-error = /var/lib/mysql/error.log
+
+#------------------------------
+# thread buffer
+#------------------------------
+read_buffer_size = 1M
+sort_buffer_size = 2M
+read_rnd_buffer_size = 1M
+join_buffer_size = 1M
+myisam_sort_buffer_size = 256K
+max_allowed_packet = 16M
+net_buffer_length = 16K
+
+#------------------------------
+# global buffer and more
+#------------------------------
+table_open_cache = 400
+key_buffer_size = 64M
+tmp_table_size = 128M
+max_heap_table_size = 128M
+query_cache_type = 1
+query_cache_size = 10M
+query_cache_limit = 1M
+query_cache_min_res_unit = 4k
+
+#------------------------------
+# connections
+#------------------------------
+max_connections = 1000
+thread_cache_size = 300
+skip_name_resolve
+
+#------------------------------
+# Replication
+#------------------------------
+server-id = <%= node[:network][:interfaces][:eth1][:routes][0][:src].split(".").last(1).join("") %>
+max_binlog_size = 512M
+binlog_format = mixed
+log_slave_updates
+expire_logs_days = 3
+log_bin = /var/lib/mysql/mysql-bin
+relay-log = /var/lib/mysql/relay-bin
+rpl_semi_sync_master_enabled = 1
+rpl_semi_sync_slave_enabled = 1
+read_only
+
+#------------------------------
+# InnoDB
+#------------------------------
+default-storage-engine = InnoDB
+innodb_data_home_dir = /var/lib/mysql
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_file_per_table
+innodb_buffer_pool_size = <%= @innodb_buffer_pool_size %>
+innodb_log_file_size = 128M
+innodb_log_buffer_size = 8M
+innodb_log_files_in_group = 2
+innodb_flush_log_at_trx_commit = 0
+innodb_thread_concurrency = 16
+innodb_commit_concurrency = 8
+innodb_flush_method=O_DIRECT
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+
+[myisamchk]
+key_buffer_size = 20M
+sort_buffer_size = 20M
+read_buffer = 2M
+write_buffer = 2M
