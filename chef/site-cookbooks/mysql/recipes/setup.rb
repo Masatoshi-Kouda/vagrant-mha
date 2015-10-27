@@ -24,11 +24,34 @@ bash 'mysql_secure_install' do
   not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'show databases;'"
 end
 
-bash 'semi_sync_plugin_install' do
+bash 'rpl_semi_sync_master install' do
   code <<-EOH
     mysql -u root -p#{node['mysql']['user']['root']} -e "INSTALL PLUGIN rpl_semi_sync_master SONAME 'semisync_master.so';"
+  EOH
+  action :run
+  not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'SHOW PLUGINS;' | grep rpl_semi_sync_master"
+end
+
+bash 'rpl_semi_sync_slave install' do
+  code <<-EOH
     mysql -u root -p#{node['mysql']['user']['root']} -e "INSTALL PLUGIN rpl_semi_sync_slave SONAME 'semisync_slave.so';"
   EOH
   action :run
-  not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'SHOW PLUGINS;' | grep rpl_semi_sync"
+  not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'SHOW PLUGINS;' | grep rpl_semi_sync_slave"
+end
+
+bash 'create replicaton user' do
+  code <<-EOH
+    mysql -u root -p#{node['mysql']['user']['root']} -e "GRANT REPLICATION SLAVE ON *.* TO 'replication'@'10.%.%.%' IDENTIFIED BY '#{node['mysql']['user']['replication']}';"
+  EOH
+  action :run
+  not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'SELECT User,Host FROM mysql.user;' | grep replication"
+end
+
+bash 'create mha user' do
+  code <<-EOH
+    mysql -u root -p#{node['mysql']['user']['root']} -e "GRANT ALL PRIVILEGES ON *.* TO 'mha'@'10.%.%.%' IDENTIFIED BY '#{node['mysql']['user']['mha']}';"
+  EOH
+  action :run
+  not_if "mysql -u root -p#{node['mysql']['user']['root']} -e 'SELECT User,Host FROM mysql.user;' | grep mha"
 end

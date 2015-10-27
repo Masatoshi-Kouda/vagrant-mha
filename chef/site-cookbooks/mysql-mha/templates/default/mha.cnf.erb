@@ -1,0 +1,27 @@
+[server default]
+# mysql user and password
+user=<%= @user %>
+password=<%= @password %>
+port=<%= @mysql_port %>
+ssh_user=<%= @ssh_user %>
+ssh_port=<%= @ssh_port %>
+# working directory on the manager
+manager_workdir=/var/log/masterha/mha
+# working directory on MySQL servers
+remote_workdir=/var/log/masterha/mha
+master_ip_failover_script= <%= @master_ip_failover_script %>
+
+[server1]
+# mha01
+hostname=<%= @node1_hostname %>
+candidate_master=1
+
+[server2]
+# mha02
+hostname=<%= @node2_hostname %>
+candidate_master=1
+
+[server3]
+# mha03
+hostname=<%= @node3_hostname %>
+no_master=1

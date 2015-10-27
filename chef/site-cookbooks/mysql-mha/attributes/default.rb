@@ -1,3 +1,11 @@
 default['mha']['node']['url_path'] = 'https://72003f4c60f5cc941cd1c7d448fc3c99e0aebaa8.googledrive.com/host/0B1lu97m8-haWeHdGWXp0YVVUSlk/mha4mysql-node-0.56-0.el6.noarch.rpm'
 default['mha']['manager']['url_path'] = 'https://72003f4c60f5cc941cd1c7d448fc3c99e0aebaa8.googledrive.com/host/0B1lu97m8-haWeHdGWXp0YVVUSlk/mha4mysql-manager-0.56-0.el6.noarch.rpm'
-
+default['mha']['manager']['user'] = 'mha'
+default['mha']['manager']['password'] = '7bv86Oddae'
+default['mha']['manager']['mysql_port'] = '3306'
+default['mha']['manager']['ssh_user'] = 'root'
+default['mha']['manager']['ssh_port'] = '62323'
+default['mha']['manager']['master_ip_failover_script'] = '/usr/local/sbin/master_ip_failover'
+default['mha']['manager']['node1_hostname'] = '10.0.0.3'
+default['mha']['manager']['node2_hostname'] = '10.0.0.4'
+default['mha']['manager']['node3_hostname'] = '10.0.0.5'

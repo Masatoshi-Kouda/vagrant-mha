@@ -14,14 +14,14 @@ $script = <<SCRIPT
   echo "PEERDNS=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
 SCRIPT
 
-  config.vm.define :db01 do |db01|
-    db01.vm.box = "centos-6.5-x86_64"
-    db01.vm.network :private_network, ip: "10.0.0.3"
-    db01.ssh.guest_port = 62323
-    db01.vm.network :forwarded_port, guest: 62323, host: 2222, id: "ssh", auto_correct: true
-    db01.vm.hostname = "db01"
-    db01.vm.provision "shell", inline: $script
-    db01.vm.provision "chef_solo" do |chef|
+  config.vm.define :node1 do |node1|
+    node1.vm.box = "centos-6.5-x86_64"
+    node1.vm.network :private_network, ip: "10.0.0.3"
+    node1.ssh.guest_port = 62323
+    node1.vm.network :forwarded_port, guest: 62323, host: 2222, id: "ssh", auto_correct: true
+    node1.vm.hostname = "node1"
+    node1.vm.provision "shell", inline: $script
+    node1.vm.provision "chef_solo" do |chef|
       chef.cookbooks_path = "../../chef/site-cookbooks/"
       chef.run_list = %w[
         recipe[base]
@@ -31,6 +31,24 @@ SCRIPT
         recipe[mysql::setup]
         recipe[mysql::conf]
         recipe[mysql-mha::node]
+      ]
+    end
+  end
+
+  config.vm.define :mgmt do |mgmt|
+    mgmt.vm.box = "centos-6.5-x86_64"
+    mgmt.vm.network :private_network, ip: "10.0.0.4"
+    mgmt.ssh.guest_port = 62323
+    mgmt.vm.network :forwarded_port, guest: 62323, host: 2222, id: "ssh", auto_correct: true
+    mgmt.vm.hostname = "mgmt"
+    mgmt.vm.provision "shell", inline: $script
+    mgmt.vm.provision "chef_solo" do |chef|
+      chef.cookbooks_path = "../../chef/site-cookbooks/"
+      chef.run_list = %w[
+        recipe[base]
+        recipe[ntp]
+        recipe[mysql::client]
+        recipe[mysql-mha::manager]
       ]
     end
   end
