@@ -37,3 +37,10 @@ template "/etc/mha.cnf" do
     :node3_hostname => node['mha']['manager']['node3_hostname']
   })
 end
+
+template "/usr/local/sbin/master_ip_failover" do
+  source "master_ip_failover"
+  mode 0755
+  owner "root"
+  group "root"
+end
