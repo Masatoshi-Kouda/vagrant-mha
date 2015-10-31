@@ -32,6 +32,7 @@ SCRIPT
         recipe[mysql::setup]
         recipe[mysql::conf]
         recipe[mysql-mha::node]
+        recipe[sysbench]
       ]
     end
   end
@@ -54,6 +55,7 @@ SCRIPT
         recipe[mysql::setup]
         recipe[mysql::conf]
         recipe[mysql-mha::node]
+        recipe[sysbench]
       ]
     end
   end
@@ -76,6 +78,7 @@ SCRIPT
         recipe[mysql::setup]
         recipe[mysql::conf]
         recipe[mysql-mha::node]
+        recipe[sysbench]
       ]
     end
   end
@@ -95,6 +98,7 @@ SCRIPT
         recipe[ntp]
         recipe[mysql::client]
         recipe[mysql-mha::manager]
+        recipe[sysbench]
       ]
     end
   end
